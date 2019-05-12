@@ -1,11 +1,17 @@
+import os
 import cv2
 import numpy as np
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+# Define paths
+base_dir = os.path.dirname(__file__)
+face_cascade_path = os.path.join(base_dir + 'model/haarcascade_frontalface_default.xml')
+eye_cascade_path = os.path.join(base_dir + 'model/haarcascade_eye.xml')
 
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier(face_cascade_path)
 
-cap = cv2.VideoCapture('pellek.mp4')
+eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
+
+cap = cv2.VideoCapture('resources/pellek.mp4')
 
 while True:
     ret, img = cap.read()
