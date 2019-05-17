@@ -1,6 +1,9 @@
+import urllib.request
 import os
 import cv2
 import numpy as np
+import pafy
+import youtube_dl
 
 # Define paths
 base_dir = os.path.dirname(__file__)
@@ -11,7 +14,13 @@ face_cascade = cv2.CascadeClassifier(face_cascade_path)
 
 eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
 
-cap = cv2.VideoCapture('resources/pellek.mp4')
+cap = cv2.VideoCapture("https://sv3.onlinevideoconverter.com/download?file=a0c2a0f5c2b1b1")
+
+if not cap.isOpened():
+    print("File Cannot be Opened")
+
+print(cap)
+
 
 while True:
     ret, img = cap.read()

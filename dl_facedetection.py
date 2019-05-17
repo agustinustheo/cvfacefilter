@@ -1,7 +1,3 @@
-# USAGE
-# python detect_faces_video.py --prototxt deploy.prototxt.txt --model res10_300x300_ssd_iter_140000.caffemodel
-
-# import the necessary packages
 from imutils.video import VideoStream
 import numpy as np
 import imutils
@@ -20,7 +16,7 @@ net = cv2.dnn.readNetFromCaffe(prototxt_path, caffemodel_path)
 
 # initialize the video stream and allow the cammera sensor to warmup
 print("[INFO] starting video stream...")
-vs = VideoStream('resources/pellek.mp4').start()
+vs = VideoStream('Rick Astley Sings Live - Never Gonna Give You Up - This Morning.mp4').start()
 
 # loop over the frames from the video stream
 while True:
