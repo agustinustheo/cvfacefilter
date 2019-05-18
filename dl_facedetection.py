@@ -10,7 +10,7 @@ import os
 base_dir = os.path.dirname(__file__)
 prototxt_path = os.path.join(base_dir + 'model/deploy.prototxt')
 caffemodel_path = os.path.join(base_dir + 'model/weights.caffemodel')
-video_url = 'https://www.youtube.com/watch?v=d-YFLAKtcKI'
+video_url = 'https://www.youtube.com/watch?v=kfchvCyHmsc'
 
 ydl_opts = {}
 
@@ -22,11 +22,17 @@ info_dict = ydl.extract_info(video_url, download=False)
 
 # get video formats available
 formats = info_dict.get('formats',None)
+duration = info_dict.get('duration',None)
+
+flag_for_testing = 0
 
 for f in formats:
-	
-	# I want the lowest resolution, so I set resolution as 480p
-	if f.get('format_note',None) == '480p':
+	url = f.get('url',None)
+	if flag_for_testing == 1:
+		break
+
+	# I want the lowest resolution, so I set resolution as 144p
+	if f.get('format_note',None) == '144p':
 		
 		#get the video url
 		url = f.get('url',None)
@@ -39,8 +45,13 @@ for f in formats:
 		print("[INFO] starting video stream...")
 		vs = cv2.VideoCapture(url)
 
+		fps = vs.get(cv2.CAP_PROP_FPS)
+		frame_count = 0
+		timestamp = []
+		start = 0
 		# loop over the frames from the video stream
 		while True:
+			frame_count = frame_count + 1
 			# grab the frame from the threaded video stream and resize it
 			# to have a maximum width of 400 pixels
 			ret, frame = vs.read()
@@ -59,6 +70,7 @@ for f in formats:
 			net.setInput(blob)
 			detections = net.forward()
 
+			sum_confidence = 0
 			# loop over the detections
 			for i in range(0, detections.shape[2]):
 				# extract the confidence (i.e., probability) associated with the
@@ -70,6 +82,7 @@ for f in formats:
 				if confidence < 0.5:
 					continue
 
+				sum_confidence = sum_confidence + confidence
 				# compute the (x, y)-coordinates of the bounding box for the
 				# object
 				box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
@@ -82,14 +95,32 @@ for f in formats:
 				cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255), 2)
 				cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
+			if sum_confidence < 0.5:
+				end = float(frame_count)/fps
+				# if face detection confidence is below 50% and the face detected index is not 0 then append face detected duration to timestamp
+				if start != 0:
+					timestamp.append( ({'start_time': start * duration} , {'end_time': end * duration}) )
+					start = 0
+			else:
+				# if face detection confidence is above 50% and the face detected index is 0 then set new face detected index
+				if start == 0:
+					start = float(frame_count)/fps
+				if frame_count == fps:
+					end = float(frame_count)/fps
+					timestamp.append( ({'start_time': start * duration} , {'end_time': end * duration}) )
+					break
+
 			# show the output frame
 			cv2.imshow("Frame", frame)
 			key = cv2.waitKey(1) & 0xFF
-		
+			flag_for_testing = 1
+
 			# if the `q` key was pressed, break from the loop
 			if key == ord("q"):
 				break
 
+vs.release()
 # do a bit of cleanup
 cv2.destroyAllWindows()
-vs.stop()
+for i in timestamp:
+	print(i)
