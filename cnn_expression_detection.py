@@ -20,7 +20,7 @@ keras.backend.set_session(sess)
 #variables
 num_classes = 7 #angry, disgust, fear, happy, sad, surprise, neutral
 batch_size = 256
-epochs = 5
+epochs = 12
 #------------------------------
 #read kaggle facial expression recognition challenge dataset (fer2013.csv)
 #https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge
@@ -77,7 +77,7 @@ x_test = x_test.astype('float32')
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 #------------------------------
-construct CNN structure
+#construct CNN structure
 model = Sequential()
 
 #1st convolution layer
@@ -190,7 +190,7 @@ custom = model.predict(x)
 emotion_analysis(custom[0])
 
 x = np.array(x, 'float32')
-x = x.reshape([48, 48]);
+x = x.reshape([48, 48])
 
 plt.gray()
 plt.imshow(x)
