@@ -164,7 +164,7 @@ if monitor_testset_results == True:
 			#print(y_test[index]) #actual scores
 			
 			testing_img = np.array(x_test[index], 'float32')
-			testing_img = testing_img.reshape([48, 48]);
+			testing_img = testing_img.reshape([48, 48])
 			
 			plt.gray()
 			plt.imshow(testing_img)

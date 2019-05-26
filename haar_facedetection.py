@@ -42,7 +42,7 @@ if __name__ == '__main__':
                 print('video not opened')
                 exit(-1)
 
-            while (cap.isOpened()):
+            while True:
                 # read frame
                 ret, frame = cap.read()
 

@@ -1,4 +1,6 @@
 from imutils.video import VideoStream
+from keras.preprocessing import image
+import tensorflow as tf
 import numpy as np
 import youtube_dl
 import imutils
@@ -59,7 +61,7 @@ for f in formats:
 			# check if frame is empty
 			if not ret:
 				break
-
+			
 			# grab the frame dimensions and convert it to a blob
 			(h, w) = frame.shape[:2]
 			blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0,
@@ -93,7 +95,8 @@ for f in formats:
 				text = "{:.2f}%".format(confidence * 100)
 				y = startY - 10 if startY - 10 > 10 else startY + 10
 				cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255), 2)
-				cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+				# put the percentage text
+				# cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
 			if sum_confidence < 0.5:
 				end = float(frame_count)/fps
@@ -109,6 +112,26 @@ for f in formats:
 					end = float(frame_count)/fps
 					timestamp.append( ({'start_time': start * duration} , {'end_time': end * duration}) )
 					break
+
+				model = tf.keras.models.load_model('model/cnn_face_expression.model')
+				detected_face = frame[int(startY):int(startY+endY), int(startX):int(startX+endX)] #crop detected face
+				detected_face = cv2.cvtColor(detected_face, cv2.COLOR_BGR2GRAY) #transform to gray scale
+				detected_face = cv2.resize(detected_face, (48, 48)) #resize to 48x48
+
+				img_pixels = image.img_to_array(detected_face)
+				img_pixels = np.expand_dims(img_pixels, axis = 0)
+				
+				img_pixels /= 255
+				
+				predictions = model.predict(img_pixels)
+				
+				#find max indexed array
+				max_index = np.argmax(predictions[0])
+				
+				emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
+				emotion = emotions[max_index]
+				
+				cv2.putText(frame, emotion, (int(startX), int(startY)), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
 			# show the output frame
 			cv2.imshow("Frame", frame)
