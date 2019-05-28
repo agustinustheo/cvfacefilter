@@ -9,7 +9,7 @@ if __name__ == '__main__':
     base_dir = os.path.dirname(__file__)
     face_cascade_path = os.path.join(base_dir + 'model/haarcascade_frontalface_default.xml')
     eye_cascade_path = os.path.join(base_dir + 'model/haarcascade_eye.xml')
-    video_url = 'https://www.youtube.com/watch?v=d-YFLAKtcKI'
+    video_url = 'https://www.youtube.com/watch?v=wZWetdW_zn8'
 
     face_cascade = cv2.CascadeClassifier(face_cascade_path)
 
