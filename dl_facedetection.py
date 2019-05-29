@@ -151,11 +151,8 @@ try:
 
 					if (emotion == 'fear' and secondary_emotion == 'sad') or (emotion == 'sad' and secondary_emotion == 'fear'):
 						emotion = 'tense'
-						print("Most detected emotion: " + str(emotion))
 					elif(emotion == 'angry' and secondary_emotion == 'sad') or (emotion == 'sad' and secondary_emotion == 'angry'):
 						emotion = 'serious'
-					else:
-						print("Most detected emotion: " + str(emotion) + ", Secondary emotion: " + str(secondary_emotion))
 
 
 					# if face detection confidence is above 50% and the face detected index is 0 then set new face detected index
