@@ -192,7 +192,12 @@ try:
 	return_timestamp = json.dumps(
 		{"result": timestamp}
 	)
-	print(return_timestamp)
+
+	count = 0
+	for x in timestamp:
+		if x["start_time"] - x["end_time"] == 0.5 and x["emotion"] == 'tense':
+			count += 1
+
 
 except Exception as e:
 	err_msg = "Error: " + str(e)
