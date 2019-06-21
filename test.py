@@ -20,7 +20,8 @@ if __name__ == '__main__':
 
     # open url with opencv
     cap = cv2.VideoCapture('resources/pellek.mp4')
-    img = cv2.imread('resources/jackman.jpg')
+    img = cv2.imread('resources/girlwoman.jpeg')
+
     img_height, img_width, _ = img.shape
 
     # check if url was opened
@@ -43,20 +44,35 @@ if __name__ == '__main__':
             minNeighbors=3,
             minSize=(10,10)
         )
+
+        # new_width, new_height = 0, 0
         for (x,y,w,h) in faces:
-            if w > h:
-                new_width = w
-                new_height = img_height / img_width * new_width
+            if img_width >= img_height:
+                new_height = int(h + 40)
+                new_width = int((img_width / img_height * new_height))
                 resize_img = cv2.resize(img, (new_width, new_height))
-            else h > w:
-                new_height = h
-                new_width = img_width / img_height * new_height
+            else:
+                new_width = int(w + 40)
+                new_height = int((img_height / img_width * new_width))
                 resize_img = cv2.resize(img, (new_width, new_height))
 
-            mid_face_width = int(w/2)
-            mid_face_height = int(h/2)
+            x1 = int(x - ((new_width - w) / 2))
+            y1 = int(y - ((new_height - h) / 2))
 
-            resize_img_height, resize_img_width, _ = resize_img.shape
+            x1_img = 0
+            y1_img = 0
+            if y1 <= 0:
+                y1 = 0
+                y1_img = y1 * -1
+            if x1 <= 0:
+                x1 = 0
+                x1_img = x1 * -1
+
+            try:
+                if 
+                frame[y1:y1+new_height-y1_img, x1:x1+new_width-x1_img] = resize_img[y1_img:new_height, x1_img:new_width]
+            except:
+                print("A")
 
             cv2.rectangle(frame, (x,y), (x+w, y+h), (255, 0, 0), 2)
             roi_gray = gray[y:y+h, x:x+w]
