@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # open url with opencv
     cap = cv2.VideoCapture('resources/pellek.mp4')
-    img = cv2.imread('resources/girlwoman.jpeg')
+    img = cv2.imread('resources/download.png', cv2.IMREAD_UNCHANGED)
 
     img_height, img_width, _ = img.shape
 
@@ -69,12 +69,13 @@ if __name__ == '__main__':
                 x1_img = x1 * -1
 
             try:
-                if 
+                # frame = cv2.cvtColor(frame, COLOR_BGR2BGRA)
                 frame[y1:y1+new_height-y1_img, x1:x1+new_width-x1_img] = resize_img[y1_img:new_height, x1_img:new_width]
-            except:
-                print("A")
+            except Exception as e:
+                print(e)
+                break
 
-            cv2.rectangle(frame, (x,y), (x+w, y+h), (255, 0, 0), 2)
+            # cv2.rectangle(frame, (x,y), (x+w, y+h), (255, 0, 0), 2)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = frame[y:y+h, x:x+w]
             eyes = eye_cascade.detectMultiScale(
@@ -89,8 +90,8 @@ if __name__ == '__main__':
                 minNeighbors=3,
                 minSize=(5,5)
             )
-            for (ex, ey, ew, eh) in eyes:
-                cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+            # for (ex, ey, ew, eh) in eyes:
+            #     cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
             # for (ex, ey, ew, eh) in nose:
             #     cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
 
