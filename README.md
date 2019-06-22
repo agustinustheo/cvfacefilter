@@ -1,5 +1,5 @@
-# Rhetoric Performance Classifier
-A model to score public speaking performances, in the hopes of creating an AI instructor of somesort to help educate people around the world with the beauty of public speaking. This classifier is uses tensorflow and keras for deep learning used on facial expression classification, and opencv for face detection.  
+# Face Filter
+Add filters on face such as doggy faces or any other face filters (trying to go for Facebook or Instagram like features). This uses code and haar cascade classifiers supplied by opencv. 
   
 
 We couldn't have assembled this rhetoric scoring model without the help of some awesome creators on the internet.  

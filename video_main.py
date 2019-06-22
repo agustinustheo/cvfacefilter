@@ -6,13 +6,9 @@ if __name__ == '__main__':
 
     # Define paths
     base_dir = os.path.dirname(__file__)
-    face_cascade_path = os.path.join(base_dir + 'model/haarcascade_frontalface_default.xml')
-    face_cascade_path_tree = os.path.join(base_dir + 'model/haarcascade_frontalface_alt_tree.xml')
     face_cascade_path_alt = os.path.join(base_dir + 'model/haarcascade_frontalface_alt2.xml')
-    face_cascade_path_alt2 = os.path.join(base_dir + 'model/haarcascade_frontalface_alt.xml')
-    # eye_cascade_path = os.path.join(base_dir + 'model/haarcascade_eye.xml')
     eye_cascade_path = os.path.join(base_dir + 'model/haarcascade_eye.xml')
-    nose_cascade_path = os.path.join(base_dir + 'model/Nariz.xml')
+    nose_cascade_path = os.path.join(base_dir + 'model/haarcascade_mcs_nose.xml')
 
     face_cascade = cv2.CascadeClassifier(face_cascade_path_alt)
     nose_cascade = cv2.CascadeClassifier(nose_cascade_path)
@@ -20,9 +16,13 @@ if __name__ == '__main__':
 
     # open url with opencv
     cap = cv2.VideoCapture('resources/pellek.mp4')
-    img = cv2.imread('resources/download.png', cv2.IMREAD_UNCHANGED)
-
+    img = cv2.imread('resources/smile.png', cv2.IMREAD_UNCHANGED)
     img_height, img_width, _ = img.shape
+
+    # for video saving
+    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    out = cv2.VideoWriter()
+    success = out.open('output.mp4',fourcc,20,(640, 360),True) 
 
     # check if url was opened
     if not cap.isOpened():
@@ -36,6 +36,8 @@ if __name__ == '__main__':
         # check if frame is empty
         if not ret:
             break
+        else:
+            filter_layer = np.zeros((frame.shape[0], frame.shape[1], 4))
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(
@@ -69,8 +71,12 @@ if __name__ == '__main__':
                 x1_img = x1 * -1
 
             try:
-                # frame = cv2.cvtColor(frame, COLOR_BGR2BGRA)
-                frame[y1:y1+new_height-y1_img, x1:x1+new_width-x1_img] = resize_img[y1_img:new_height, x1_img:new_width]
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
+                filter_layer[y1:y1+new_height-y1_img, x1:x1+new_width-x1_img] = resize_img[y1_img:new_height, x1_img:new_width]
+                res = frame[:] #copy the first layer into the resulting image
+
+                cnd = filter_layer[:, :, 3] > 0
+                res[cnd] = filter_layer[cnd]
             except Exception as e:
                 print(e)
                 break
@@ -92,15 +98,17 @@ if __name__ == '__main__':
             )
             # for (ex, ey, ew, eh) in eyes:
             #     cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
-            # for (ex, ey, ew, eh) in nose:
-            #     cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
+            for (ex, ey, ew, eh) in nose:
+                cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
 
         # display frame
-        cv2.imshow('frame', frame)
+        cv2.imshow('frame', res)
+        out.write(res)
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break
 
     # release VideoCapture
     cap.release()
+    out.release()
     cv2.destroyAllWindows()
