@@ -19,11 +19,11 @@ if __name__ == '__main__':
 
     # open url with opencv
     frame = cv2.imread('resources/lena.png')
-    img = cv2.imread('resources/dog_ears.png', cv2.IMREAD_UNCHANGED)
+    img = cv2.imread('filter/dog_ears.png', cv2.IMREAD_UNCHANGED)
     img_height, img_width, _ = img.shape
-    nose_filter = cv2.imread('resources/dog_nose.png', cv2.IMREAD_UNCHANGED)
+    nose_filter = cv2.imread('filter/dog_nose.png', cv2.IMREAD_UNCHANGED)
     nose_filter_height, nose_filter_width, _ = nose_filter.shape
-    mouth_filter = cv2.imread('resources/tongue.png', cv2.IMREAD_UNCHANGED)
+    mouth_filter = cv2.imread('filter/tongue.png', cv2.IMREAD_UNCHANGED)
     mouth_filter_height, mouth_filter_width, _ = mouth_filter.shape
 
     filter_layer = np.zeros((frame.shape[0], frame.shape[1], 4))
