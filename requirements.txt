@@ -1,5 +1,5 @@
 opencv-python==3.4.2.16
 imutils==0.5.2
 youtube_dl==2019.5.11
-tensorflow==1.13.1
+tensorflow==1.15.0
 Keras==2.2.4
