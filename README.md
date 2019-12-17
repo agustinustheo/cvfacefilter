@@ -2,7 +2,7 @@
 Add filters on face such as doggy faces or any other face filters (trying to go for Facebook or Instagram like features). This uses code and haar cascade classifiers supplied by opencv. 
 
 
-We couldn't have assembled this filtering app without the help of some awesome creators on the internet.  
+I couldn't have assembled this filtering app without the help of some awesome creators on the internet.  
 
 Credits to:  
 Harrison Kinsley a.k.a sentdex
